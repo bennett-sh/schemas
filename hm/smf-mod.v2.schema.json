@@ -219,7 +219,8 @@
                 "type": "string",
                 "anyOf": [
                   { "not": { "properties": { "type": "conditional" } } },
-                  { "enum": ["checkbox", "select"] }
+                  { "not": { "properties": { "type": "select" } } },
+                  { "enum": ["checkbox"] }
                 ]
               }
             }
@@ -234,6 +235,15 @@
                   { "type": "string" },
                   { "enum": ["\"Atampy26.SomeOtherMod\" in config.loadOrder"] }
                 ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": { "const": "select" },
+              "group": {
+                "type": "string"
               }
             }
           }
