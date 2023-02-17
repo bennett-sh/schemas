@@ -73,6 +73,13 @@
         "chineseTraditional": { "$ref": "#/$defs/localisationObject" }
       },
       "additionalProperties": false
+    },
+    "localisationOverrides": {
+      "type": "object",
+      "description": "Allows you to override specific localisations in specific files",
+      "patternProperties": {
+        "${hash}": { "type": "number" }
+      }
     }
   },
   "required": [
