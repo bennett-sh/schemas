@@ -5,26 +5,24 @@
   "description": "A mod designed to work with the Simple Mod Framework",
   "type": "object",
   "properties": {
+    "$schema": {},
     "id": {
       "type": "string",
       "pattern": "\\w+\\.\\w+",
-      "description": "The mod id in the format \"Author.ID\""
+      "description": "The mod ID in the format \"Author.ID\""
     },
     "version": {
       "type": "string",
-      "description": "The mod version",
-      "pattern": "\\d+\\.\\d+\\.\\d+(\\-.*\\.\\d+)?"
+      "pattern": "\\d+\\.\\d+\\.\\d+(\\-.*\\.\\d+)?",
+      "description": "The mod's version, used to compare against the linked JSON - make sure to use semantic versioning (Major.Minor.Patch)"
     },
     "name": {
-      "type": "string",
-      "description": "The name of the mod"
+      "type": "string"
     },
     "description": {
-      "type": "string",
-      "description": "The description of the mod"
+      "type": "string"
     },
     "authors": {
-      "description": "A list of all authors of the mod",
       "type": "array",
       "items": {
         "type": "string"
@@ -33,7 +31,7 @@
       "uniqueItems": true
     },
     "contentFolders": {
-      "description": "A list of folders containing mod files",
+      "description": "Folders next to the manifest to use for the mod content",
       "type": "array",
       "items": {
         "type": "string"
@@ -41,7 +39,7 @@
       "uniqueItems": true
     },
     "blobsFolders": {
-      "description": "A list of folders for blob mod files (new/edited existing JSON and GFXI files)",
+      "description": "Folders next to the manifest to use for blobs (new/edited existing JSON and GFXI files)",
       "type": "array",
       "items": {
         "type": "string"
@@ -49,18 +47,261 @@
       "uniqueItems": true
     },
     "frameworkVersion": {
-      "description": "The framework version the mod is made for",
+      "description": "The framework version the mod is designed for",
       "type": "string",
       "pattern": "2\\.\\d+\\.\\d+(\\-.*\\.\\d+)?"
     },
     "updateCheck": {
       "description": "An url to an update JSON file",
       "type": "string",
-      "pattern": "https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)"
+      "pattern": "^https?:\\/\\/(.*(:.*)@)?(.*\\.)?.*\\.\\w+(:\\d+)?(/.*)?(\\?.*)?(#.*)?$"
     },
-    "localisation": {
+    "localisation": { "$ref": "#/$defs/localisationConfig" },
+    "localisationOverrides": {
       "type": "object",
-      "description": "An object providing translations",
+      "description": "Allows you to override specific localisations in specific files",
+      "patternProperties": {
+        "[a-zA-Z0-9]{16}": {
+          "type": "object",
+          "properties": {
+            "english": { "$ref": "#/$defs/localisationOverrideObject" },
+            "german": { "$ref": "#/$defs/localisationOverrideObject" },
+            "french": { "$ref": "#/$defs/localisationOverrideObject" },
+            "japanese": { "$ref": "#/$defs/localisationOverrideObject" },
+            "italian": { "$ref": "#/$defs/localisationOverrideObject" },
+            "spanish": { "$ref": "#/$defs/localisationOverrideObject" },
+            "russian": { "$ref": "#/$defs/localisationOverrideObject" },
+            "chineseSimplified": {
+              "$ref": "#/$defs/localisationOverrideObject"
+            },
+            "chineseTraditional": {
+              "$ref": "#/$defs/localisationOverrideObject"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "localisedLines": {
+      "description": "Allows you to link specific lines to a runtime ID for use in certain filetypes (like entities)",
+      "type": "object",
+      "$ref": "#/$defs/localisationObject"
+    },
+    "packagedefinition": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "oneOf": [
+          {
+            "properties": {
+              "type": { "const": "entity" },
+              "partition": { "type": "string", "pattern": "^.*\\d+$" },
+              "path": {
+                "type": "string",
+                "pattern": "\\[assembly:\\/_pro\\/.*\\]\\..*$"
+              }
+            },
+            "required": ["type", "partition", "path"]
+          },
+          {
+            "properties": {
+              "type": { "const": "partition" },
+              "name": { "type": "string" },
+              "parent": {
+                "anyOf": [{ "enum": ["season3"] }, { "type": "string" }]
+              },
+              "partitionType": {
+                "type": "string",
+                "anyOf": [
+                  {
+                    "pattern": "^\\[assembly:\\/_pro\\/.*\\]\\..*$"
+                  },
+                  { "const": "standard" },
+                  { "const": "[assembly:/_pro/...].entitytemplate" },
+                  { "type": null }
+                ]
+              }
+            },
+            "required": ["type", "name", "parent", "partitionType"]
+          }
+        ]
+      }
+    },
+    "thumbs": {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "enum": [
+              "ConsoleCmd X",
+              "SCENE_FILE=assembly:/_PRO/Scenes/Frontend/Boot.entity",
+              "ConsoleCmd Render_ShowDebug 0"
+            ]
+          },
+          { "type": "string" }
+        ]
+      },
+      "description": "Thumbs.dat commands to place after [Hitman5]"
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "runtimeID": { "type": "string", "pattern": "^[a-zA-Z0-9]{16}$" },
+              "toChunk": { "type": "number" },
+              "portFromChunk1": { "type": "boolean" }
+            },
+            "additionalProperties": false,
+            "required": ["runtimeID", "toChunk", "portFromChunk1"]
+          },
+          { "type": "string", "pattern": "^[a-zA-Z0-9]{16}$" }
+        ]
+      },
+      "uniqueItems": true
+    },
+    "supportedPlatforms": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["steam", "epic", "microsoft"]
+      },
+      "uniqueItems": true
+    },
+    "requirements": { "$ref": "#/$defs/modReferenceList" },
+    "incompatibilities": { "$ref": "#/$defs/modReferenceList" },
+    "loadBefore": { "$ref": "#/$defs/modReferenceList" },
+    "loadAfter": { "$ref": "#/$defs/modReferenceList" },
+    "scripts": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": ".*\\.ts$"
+      },
+      "uniqueItems": true
+    },
+    "options": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "tooltip": { "type": "string" },
+          "image": { "type": "string" },
+          "group": { "type": "string" },
+          "localisation": { "$ref": "#/$defs/localisationConfig" },
+          "requirements": { "$ref": "#/$defs/modReferenceList" },
+          "scripts": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": ".*\\.ts$"
+            },
+            "uniqueItems": true
+          },
+          "contentFolders": {
+            "description": "Folders next to the manifest to use for the mod content",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          },
+          "enabledByDefault": { "type": "boolean" }
+        },
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "anyOf": [
+                  { "not": { "properties": { "type": "conditional" } } },
+                  { "enum": ["checkbox", "select"] }
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": { "const": "conditional" },
+              "condition": {
+                "type": "string",
+                "anyOf": [
+                  { "type": "string" },
+                  { "enum": ["\"Atampy26.SomeOtherMod\" in config.loadOrder"] }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "required": ["name", "type"]
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "version",
+    "name",
+    "description",
+    "authors",
+    "frameworkVersion"
+  ],
+  "$defs": {
+    "localisationObject": {
+      "type": "object",
+      "patternProperties": {
+        "\\w+": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "localisationOverrideObject": {
+      "type": "object",
+      "patternProperties": {
+        "^[0-9]{9}$": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "modReferenceList": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          { "type": "string" },
+          {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": [
+              {
+                "type": "string",
+                "anyOf": [{ "const": "Author.ModID" }, { "type": null }]
+              },
+              {
+                "type": "string",
+                "anyOf": [
+                  { "const": ">2.5.0 || 1.0.2 - 2.0.1" },
+                  { "const": ">1.0.0 && <2.0.0" },
+                  { "type": null }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "uniqueItems": true
+    },
+    "localisationConfig": {
+      "type": "object",
+      "description": "Allows you to write & translate text",
       "properties": {
         "english": { "$ref": "#/$defs/localisationObject" },
         "german": { "$ref": "#/$defs/localisationObject" },
@@ -73,28 +314,6 @@
         "chineseTraditional": { "$ref": "#/$defs/localisationObject" }
       },
       "additionalProperties": false
-    },
-    "localisationOverrides": {
-      "type": "object",
-      "description": "Allows you to override specific localisations in specific files",
-      "patternProperties": {
-        "[a-zA-Z0-9]{16}": { "type": "number" }
-      }
-    }
-  },
-  "required": [
-    "id", "version", "name", "description", "authors", "frameworkVersion"
-  ],
-  "$defs": {
-    "localisationObject": {
-      "description": "A translations object",
-      "type": "object",
-      "patternProperties": {
-        "[a-zA-Z0-9]{16}": {
-          "type": "string",
-          "description": "A translation"
-        }
-      }
     }
   }
 }
