@@ -13,7 +13,7 @@
     "version": {
       "type": "string",
       "description": "The mod version",
-      "pattern": { "$ref": "#/$defs/version" }
+      "pattern": "\\d+\\.\\d+\\.\\d+(\\-.*\\.\\d+)?"
     },
     "name": {
       "type": "string",
@@ -51,12 +51,12 @@
     "frameworkVersion": {
       "description": "The framework version the mod is made for",
       "type": "string",
-      "pattern": { "$ref": "#/$defs/smfVersion" }
+      "pattern": "2\\.\\d+\\.\\d+(\\-.*\\.\\d+)?"
     },
     "updateCheck": {
       "description": "An url to an update JSON file",
       "type": "string",
-      "pattern": { "$ref": "#/$defs/url" }
+      "pattern": "https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)"
     },
     "localisation": {
       "type": "object",
@@ -78,7 +78,7 @@
       "type": "object",
       "description": "Allows you to override specific localisations in specific files",
       "patternProperties": {
-        "${hash}": { "type": "number" }
+        "[a-zA-Z0-9]{16}": { "type": "number" }
       }
     }
   },
@@ -86,33 +86,15 @@
     "id", "version", "name", "description", "authors", "frameworkVersion"
   ],
   "$defs": {
-    "hash": {
-      "type": "string",
-      "pattern": "[a-zA-Z0-9]{16}"
-    },
     "localisationObject": {
       "description": "A translations object",
       "type": "object",
-      "pattern": {
-        "$ref": "#/$defs/hash",
-        "type": "string",
-        "description": "A translation"
+      "patternProperties": {
+        "[a-zA-Z0-9]{16}": {
+          "type": "string",
+          "description": "A translation"
+        }
       }
-    },
-    "version": {
-      "type": "string",
-      "description": "A semver version (major.minor.fix or major.minor.fix-beta.0)",
-      "pattern": "\\d+\\.\\d+\\.\\d+(\\-.*\\.\\d+)?"
-    },
-    "smfVersion": {
-      "type": "string",
-      "description": "A SMF version compatible with this schema",
-      "pattern": "2\\.\\d+\\.\\d+(\\-.*\\.\\d+)?"
-    },
-    "url": {
-      "type": "string",
-      "description": "An URL",
-      "pattern": "https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)"
     }
   }
 }
