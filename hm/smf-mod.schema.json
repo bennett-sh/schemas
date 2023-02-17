@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/bennett-sh/schemas/main/hm/smf-mod.schema.json",
+  "title": "SMF Mod",
+  "description": "A mod designed to work with the Simple Mod Framework",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "The mod version"
+    },
+    "name": {
+      "type": "string",
+      "description": "The name of the mod"
+    },
+    "description": {
+      "type": "string",
+      "description": "The description of the mod"
+    },
+    "authors": {
+      "description": "A list of all authors of the mod",
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "contentFolders": {
+      "description": "A list of folders containing mod files",
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "blobsFolders": {
+      "description": "A list of folders for blob mod files (new/edited existing JSON and GFXI files)",
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "frameworkVersion": {
+      "description": "The framework version the mod is made for",
+      "type": "string"
+    },
+    "updateCheck": {
+      "description": "An url to an update JSON file",
+      "type": "string"
+    },
+    "localisation": {
+      "type": "object",
+      "description": "An object providing translations",
+      "patternProperties": {
+        "(english|french|italian|german|spanish|russian|chineseSimplified|chineseTraditional|japanese)": {
+          "description": "A translations object",
+          "type": "object",
+          "pattern": {
+            "$ref": "#/$defs/hash",
+            "type": "string",
+            "description": "A translation"
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "id", "version", "name", "description", "authors", "frameworkVersion"
+  ],
+  "$defs": {
+    "hash": {
+      "type": "string",
+      "pattern": ".*"
+    }
+  }
+}
