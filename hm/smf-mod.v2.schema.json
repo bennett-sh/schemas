@@ -57,22 +57,18 @@
     "localisation": {
       "type": "object",
       "description": "An object providing translations",
-      "oneOf": [
-        {
-          "properties": {
-            "english": { "$ref": "#/$defs/localisationObject" },
-            "german": { "$ref": "#/$defs/localisationObject" },
-            "french": { "$ref": "#/$defs/localisationObject" },
-            "japanese": { "$ref": "#/$defs/localisationObject" },
-            "italian": { "$ref": "#/$defs/localisationObject" },
-            "spanish": { "$ref": "#/$defs/localisationObject" },
-            "russian": { "$ref": "#/$defs/localisationObject" },
-            "chineseSimplified": { "$ref": "#/$defs/localisationObject" },
-            "chineseTraditional": { "$ref": "#/$defs/localisationObject" }
-          },
-          "additionalProperties": false
-        }
-      ]
+      "properties": {
+        "english": { "$ref": "#/$defs/localisationObject" },
+        "german": { "$ref": "#/$defs/localisationObject" },
+        "french": { "$ref": "#/$defs/localisationObject" },
+        "japanese": { "$ref": "#/$defs/localisationObject" },
+        "italian": { "$ref": "#/$defs/localisationObject" },
+        "spanish": { "$ref": "#/$defs/localisationObject" },
+        "russian": { "$ref": "#/$defs/localisationObject" },
+        "chineseSimplified": { "$ref": "#/$defs/localisationObject" },
+        "chineseTraditional": { "$ref": "#/$defs/localisationObject" }
+      },
+      "additionalProperties": false
     }
   },
   "required": [
