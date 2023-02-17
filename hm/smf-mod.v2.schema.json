@@ -8,7 +8,10 @@
     "$schema": {},
     "id": {
       "type": "string",
-      "pattern": "\\w+\\.\\w+",
+      "anyOf": [
+        { "type": null },
+        { "pattern": "\\w+\\.\\w+" }
+      ],
       "description": "The mod ID in the format \"Author.ID\""
     },
     "version": {
