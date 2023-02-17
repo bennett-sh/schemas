@@ -1,10 +1,14 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/bennett-sh/schemas/main/hm/smf-mod.schema.json",
+  "$id": "https://raw.githubusercontent.com/bennett-sh/schemas/main/hm/smf-mod.v2.schema.json",
   "title": "SMF Mod",
   "description": "A mod designed to work with the Simple Mod Framework",
   "type": "object",
   "properties": {
+    "id": {
+      "type": "string",
+      "description": "The mod id in the format \"Author.ID\""
+    },
     "version": {
       "type": "string",
       "description": "The mod version"
@@ -53,17 +57,22 @@
     "localisation": {
       "type": "object",
       "description": "An object providing translations",
-      "patternProperties": {
-        "(english|french|italian|german|spanish|russian|chineseSimplified|chineseTraditional|japanese)": {
-          "description": "A translations object",
-          "type": "object",
-          "pattern": {
-            "$ref": "#/$defs/hash",
-            "type": "string",
-            "description": "A translation"
-          }
+      "oneOf": [
+        {
+          "properties": {
+            "english": { "$ref": "#/$defs/localisationObject" },
+            "german": { "$ref": "#/$defs/localisationObject" },
+            "french": { "$ref": "#/$defs/localisationObject" },
+            "japanese": { "$ref": "#/$defs/localisationObject" },
+            "italian": { "$ref": "#/$defs/localisationObject" },
+            "spanish": { "$ref": "#/$defs/localisationObject" },
+            "russian": { "$ref": "#/$defs/localisationObject" },
+            "chineseSimplified": { "$ref": "#/$defs/localisationObject" },
+            "chineseTraditional": { "$ref": "#/$defs/localisationObject" }
+          },
+          "additionalProperties": false
         }
-      }
+      ]
     }
   },
   "required": [
@@ -73,6 +82,15 @@
     "hash": {
       "type": "string",
       "pattern": ".*"
+    },
+    "localisationObject": {
+      "description": "A translations object",
+      "type": "object",
+      "pattern": {
+        "$ref": "#/$defs/hash",
+        "type": "string",
+        "description": "A translation"
+      }
     }
   }
 }
