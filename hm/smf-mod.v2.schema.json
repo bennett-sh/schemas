@@ -7,11 +7,13 @@
   "properties": {
     "id": {
       "type": "string",
+      "pattern": "\\w+\\.\\w+",
       "description": "The mod id in the format \"Author.ID\""
     },
     "version": {
       "type": "string",
-      "description": "The mod version"
+      "description": "The mod version",
+      "pattern": { "$ref": "#/$defs/version" }
     },
     "name": {
       "type": "string",
@@ -48,11 +50,13 @@
     },
     "frameworkVersion": {
       "description": "The framework version the mod is made for",
-      "type": "string"
+      "type": "string",
+      "pattern": { "$ref": "#/$defs/smfVersion" }
     },
     "updateCheck": {
       "description": "An url to an update JSON file",
-      "type": "string"
+      "type": "string",
+      "pattern": { "$ref": "#/$defs/url" }
     },
     "localisation": {
       "type": "object",
@@ -77,7 +81,7 @@
   "$defs": {
     "hash": {
       "type": "string",
-      "pattern": ".*"
+      "pattern": "[a-zA-Z0-9]{16}"
     },
     "localisationObject": {
       "description": "A translations object",
@@ -87,6 +91,21 @@
         "type": "string",
         "description": "A translation"
       }
+    },
+    "version": {
+      "type": "string",
+      "description": "A semver version (major.minor.fix or major.minor.fix-beta.0)",
+      "pattern": "\\d+\\.\\d+\\.\\d+(\\-.*\\.\\d+)?"
+    },
+    "smfVersion": {
+      "type": "string",
+      "description": "A SMF version compatible with this schema",
+      "pattern": "2\\.\\d+\\.\\d+(\\-.*\\.\\d+)?"
+    },
+    "url": {
+      "type": "string",
+      "description": "An URL",
+      "pattern": "https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)"
     }
   }
 }
