@@ -133,9 +133,9 @@
         "anyOf": [
           {
             "enum": [
-              "ConsoleCmd X",
               "SCENE_FILE=assembly:/_PRO/Scenes/Frontend/Boot.entity",
-              "ConsoleCmd Render_ShowDebug 0"
+              "ConsoleCmd Render_ShowDebug 0",
+              "ConsoleCmd OnlineResources_Disable 1"
             ]
           },
           { "type": "string" }
